@@ -5,8 +5,12 @@ resources:
       sourceArtifactory: demoArt
       buildName: demo_build
       buildNumber: 1
+  - name: buildParameters
+    type: FileSpec
+    configuration:
+      sourceArtifactory: demoArt      
 pipelines:
-  - name: demo_jenkins
+  - name: workflow_from_jenkins
     steps:
       - name: go_service_build
         type: Jenkins
@@ -17,6 +21,34 @@ pipelines:
             - name: demo_build_info
 
       - name: some_bash
+        type: Bash
+        configuration:
+          inputResources:
+            - name: demo_build_info
+        execution:
+          onStart:
+            - echo "did the jenkins job"
+
+  - name: workflow_from_pipelines
+    steps:
+      - name: step_1
+        type: Bash
+        configuration:
+          outputResources:
+            - name: buildParameters
+        execution:
+          onStart:
+            - echo "Step 1"    
+      - name: go_service_build
+        type: Jenkins
+        configuration:
+          integrations:
+            - name: demoJenkins
+          inputResources:
+            - name: buildParameters
+          outputResources:
+            - name: demo_build_info
+      - name: step_2
         type: Bash
         configuration:
           inputResources:
