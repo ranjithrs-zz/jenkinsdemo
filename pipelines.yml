@@ -1,16 +1,26 @@
-- name: demo_jenkins
-  steps:
-    - name: go_service_build
-      type: Jenkins
-      configuration:
-        integrations:
-          - name: demoJenkins
+resources:
+  - name: demo_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: demoArt
+      buildName: demo_build
+      buildNumber: 1
+pipelines
+  - name: demo_jenkins
+    steps:
+      - name: go_service_build
+        type: Jenkins
+        configuration:
+          integrations:
+            - name: demoJenkins
+          outputResources:
+            - name: demo_build_info
 
-    - name: some_bash
-      type: Bash
-      configuration:
-        inputSteps:
-          - name: go_service_build
-      execution:
-        onStart:
-          - echo "did the jenkins job"
+      - name: some_bash
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: go_service_build
+        execution:
+          onStart:
+            - echo "did the jenkins job"
