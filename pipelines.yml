@@ -5,7 +5,7 @@ resources:
       sourceArtifactory: demoArt
       buildName: demo_build
       buildNumber: 1
-pipelines
+pipelines:
   - name: demo_jenkins
     steps:
       - name: go_service_build
